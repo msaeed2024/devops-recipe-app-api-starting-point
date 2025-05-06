@@ -1,3 +1,5 @@
+
+
 server {
     listen ${LISTEN_PORT};
 
@@ -10,8 +12,11 @@ server {
     }
 
     location / {
-        uwsgi_pass              ${APP_HOST}:${APP_PORT};
-        include                 /etc/nginx/uwsgi_params;
+        include                 gunicorn_header;
+        proxy_redirect          off;
+        proxy_pass              http://${APP_HOST}:${APP_PORT};
         client_max_body_size    10M;
     }
 }
+
+
