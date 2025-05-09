@@ -165,3 +165,30 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+<<<<<<< HEAD
+=======
+
+# Ignore environment/config/secret files
+.env
+.env.*
+*.pem
+*.tfstate
+*.tfstate.backup
+*.key
+*.crt
+*.aws
+
+# Ignore system files
+.DS_Store
+.idea/
+.vscode/
+__pycache__/
+
+# Ignore Python virtualenvs
+venv/
+.env/
+
+# Ignore Terraform crash logs
+crash.log
+.env
+>>>>>>> 7387735 (Initial clean commit)

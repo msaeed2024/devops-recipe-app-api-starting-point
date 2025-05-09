@@ -1,5 +1,6 @@
 services:
   terraform:
+<<<<<<< HEAD
     image:  hashicorp/terraform:1.6.2
     volumes:
       - ./setup:/tf/setup
@@ -11,3 +12,13 @@ services:
       - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
       - AWS_DEFAULT_REGION=us-east-1
       - TF_WORKSPACE=${TF_WORKSPACE}
+=======
+    image: hashicorp/terraform:1.6.2
+    volumes:
+      - ./setup:/tf/setup
+      - ./setup:/tf/deploy
+      - /home/msaeed/.aws:/root/.aws
+    working_dir: /tf
+    env_file:
+      - .env
+>>>>>>> 7387735 (Initial clean commit)
