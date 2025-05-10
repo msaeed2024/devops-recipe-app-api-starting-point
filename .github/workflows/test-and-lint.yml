@@ -3,7 +3,7 @@ name: Test and Lint
 on:
   workflow_call:
     secrets:
-      DOCKERHUB_USER:
+      DOCKERHUB_USER: 
         required: true
         description: "Username for DockerHub auth"
       DOCKERHUB_TOKEN:
@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Terraform lint
         run: |
-          cd Infra/
+          cd infra/
           docker compose run --rm terraform -chdir=deploy/ init -backend=false
           docker compose run --rm terraform -chdir=setup/ init -backend=false
           docker compose run --rm terraform -chdir=setup/ validate
