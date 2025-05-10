@@ -16,15 +16,6 @@ terraform {
 }
 provider "aws" {
   region = "us-east-1"
-<<<<<<< HEAD
-
-  default_tags {
-    Environment = var.project
-    contact     = "var.contact"
-    ManageBy    = "Terraform/setup"
-  }
-}
-=======
   default_tags {
     tags = {
       Environment = terraform.workspace
@@ -36,4 +27,3 @@ provider "aws" {
 }
 
 
->>>>>>> 7387735 (Initial clean commit)
