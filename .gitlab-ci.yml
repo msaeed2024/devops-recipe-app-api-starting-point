@@ -37,7 +37,7 @@ Deploy to AWS:
   stage: Deploy
   variables:
     AWS_DEFAULT_REGION: us-east-1
-  script:
+  script:  
   - echo "TF_WORKSPACE=$CI_COMMIT_BRANCH"
   - aws --version
   - echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID"
