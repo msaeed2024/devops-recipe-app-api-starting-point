@@ -72,8 +72,8 @@ Terraform Deploy:
   stage: Deploy
   rules:
     - if: "$CI_COMMIT_BRANCH =~ /^(main|prod)$/"
-  script:
-    - echo "💬 Using workspace: $CI_COMMIT_BRANCH"
+  script: |
+    - echo  "TF_WORKSPACE: $CI_COMMIT_BRANCH"
     - export TF_VAR_ecr_app_image="$ECR_REGISTRY/$ECR_REPO_APP:$IMAGE_TAG"
     - export TF_VAR_ecr_proxy_image="$ECR_REGISTRY/$ECR_REPO_PROXY:$IMAGE_TAG"
 
