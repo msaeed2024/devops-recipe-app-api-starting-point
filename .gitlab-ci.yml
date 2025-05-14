@@ -38,11 +38,11 @@ Deploy to AWS:
   variables:
     AWS_DEFAULT_REGION: us-east-1
   script:
-  - echo "💬 Using workspace: $CI_COMMIT_BRANCH"
+  - echo "TF_WORKSPACE=$CI_COMMIT_BRANCH"
   - aws --version
-  - echo "AWS_ACCOUNT_ID: $AWS_ACCOUNT_ID"
-  - echo "ECR_REPO_APP: $ECR_REPO_APP"
-  - echo "ECR_REPO_PROXY: $ECR_REPO_PROXY"
+  - echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID"
+  - echo "ECR_REPO_APP=$ECR_REPO_APP"
+  - echo "ECR_REPO_PROXY=$ECR_REPO_PROXY"
   - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   - docker build -t $ECR_REPO_APP:$CI_COMMIT_SHA .
   - docker push $ECR_REPO_APP:$CI_COMMIT_SHA
