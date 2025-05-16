@@ -33,28 +33,30 @@ Terraform Checks:
     - if: "$CI_COMMIT_BRANCH =~ /^(main|prod)$/"
 
 Deploy to AWS:
-  image: amazon/aws-cli
+  image: docker:latest
   stage: Deploy
+  services:
+    - docker:24.0-dind
   variables:
+    DOCKER_DRIVER: overlay2
     AWS_DEFAULT_REGION: us-east-1
-  script:  
-  - echo "TF_WORKSPACE=$CI_COMMIT_BRANCH"
-  - aws --version
-  - echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID"
-  - echo "ECR_REPO_APP=$ECR_REPO_APP"
-  - echo "ECR_REPO_PROXY=$ECR_REPO_PROXY"
-  - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-  - docker build -t $ECR_REPO_APP:$CI_COMMIT_SHA .
-  - docker push $ECR_REPO_APP:$CI_COMMIT_SHA
-  - docker build -t $ECR_REPO_PROXY:$CI_COMMIT_SHA proxy/
-  - docker push $ECR_REPO_PROXY:$CI_COMMIT_SHA
-  - export TF_VAR_ecr_app_image="$ECR_REPO_APP:$CI_COMMIT_SHA"
-  - export TF_VAR_ecr_proxy_image="$ECR_REPO_PROXY:$CI_COMMIT_SHA"
-  - cd infra/
-  - docker compose run --rm terraform -chdir=deploy/ init
-  - docker compose run --rm terraform -chdir=deploy/ workspace select -or-create $CI_COMMIT_BRANCH
-  - docker compose run --rm terraform -chdir=deploy/ apply -auto-approve
-
+  before_script:
+    - apk add --no-cache python3 py3-pip
+    - pip3 install --upgrade awscli
+    - aws --version
+    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  script:
+    - echo "main:$CI_COMMIT_BRANCH"
+    - docker build -t $ECR_REPO_APP:$CI_COMMIT_SHA .
+    - docker push $ECR_REPO_APP:$CI_COMMIT_SHA
+    - docker build -t $ECR_REPO_PROXY:$CI_COMMIT_SHA proxy/
+    - docker push $ECR_REPO_PROXY:$CI_COMMIT_SHA
+    - export TF_VAR_ecr_app_image="$ECR_REPO_APP:$CI_COMMIT_SHA"
+    - export TF_VAR_ecr_proxy_image="$ECR_REPO_PROXY:$CI_COMMIT_SHA"
+    - cd infra/
+    - docker compose run --rm terraform -chdir=deploy/ init
+    - docker compose run --rm terraform -chdir=deploy/ workspace select -or-create $CI_COMMIT_BRANCH
+    - docker compose run --rm terraform -chdir=deploy/ apply -auto-approve
   rules:
     - if: "$CI_COMMIT_BRANCH =~ /^(main|prod)$/"
 
